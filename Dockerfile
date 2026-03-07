@@ -1,0 +1,14 @@
+# Polaris IDE session sandbox. One container per user; runs as non-root.
+# Build: docker build -t polaris-sandbox:latest .   (or -f Dockerfile.sandbox .)
+FROM node:20-alpine
+
+RUN apk add --no-cache python3 py3-pip git bash curl wget make g++ \
+  && npm install -g typescript ts-node nodemon \
+  && addgroup -S sandbox && adduser -S sandbox -G sandbox -u 1001
+
+WORKDIR /workspace
+RUN chown -R sandbox:sandbox /workspace
+
+EXPOSE 3000
+USER sandbox
+CMD ["/bin/bash"]
